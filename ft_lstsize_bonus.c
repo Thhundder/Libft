@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: Evan <Evan@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 15:45:17 by Evan              #+#    #+#             */
+/*   Updated: 2025/03/04 15:55:05 by Evan             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-int ft_lstsize(t_list *lst)
+int	ft_lstsize(t_list *lst)
 {
-	t_list *tmp;
-	int count;
+	int		count;
+	t_list	*tmp;
 
 	tmp = lst;
 	count = 0;
@@ -12,5 +24,5 @@ int ft_lstsize(t_list *lst)
 		count++;
 		tmp = tmp->next;
 	}
-	return count;
+	return (count);
 }

@@ -1,22 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: Evan <Evan@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 15:45:11 by Evan              #+#    #+#             */
+/*   Updated: 2025/03/04 15:54:31 by Evan             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 #include <stdlib.h>
 
-static t_list *ft_lstnewe(void *content)
+static t_list	*ft_lstnewe(void *content)
 {
-	t_list *new;
+	t_list	*new;
 
 	new = malloc(sizeof(t_list));
 	if (!new)
-		return NULL;
+		return (NULL);
 	new->content = content;
 	new->next = NULL;
-	return new;
+	return (new);
 }
 
-static void ft_lstcleare(t_list **lst, void (*del)(void *))
+static void	ft_lstcleare(t_list **lst, void (*del)(void *))
 {
-	t_list *tmp;
-	t_list *next;
+	t_list	*tmp;
+	t_list	*next;
 
 	tmp = *lst;
 	while (tmp)
@@ -28,9 +40,10 @@ static void ft_lstcleare(t_list **lst, void (*del)(void *))
 	}
 	*lst = NULL;
 }
-static void ft_lstadd_backe(t_list **lst, t_list *new)
+
+static void	ft_lstadd_backe(t_list **lst, t_list *new)
 {
-	t_list *tmp;
+	t_list	*tmp;
 
 	if (!new || !lst)
 		return ;
@@ -47,24 +60,24 @@ static void ft_lstadd_backe(t_list **lst, t_list *new)
 	tmp->next = new;
 }
 
-t_list *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-    t_list *new_list;
-    t_list *new_elem;
+	t_list	*new_list;
+	t_list	*new_elem;
 
-    if (!lst || !f || !del)
-        return 0;
-    new_list = 0;
-    while (lst)
-    {
-        new_elem = ft_lstnewe(f(lst->content));
-        if (!new_elem)
-        {
-            ft_lstcleare(&new_list, del);
-            return 0;
-        }
-        ft_lstadd_backe(&new_list, new_elem);
-        lst = lst->next;
-    }
-    return new_list;
+	if (!lst || !f || !del)
+		return (0);
+	new_list = 0;
+	while (lst)
+	{
+		new_elem = ft_lstnewe(f(lst->content));
+		if (!new_elem)
+		{
+			ft_lstcleare(&new_list, del);
+			return (0);
+		}
+		ft_lstadd_backe(&new_list, new_elem);
+		lst = lst->next;
+	}
+	return (new_list);
 }

@@ -1,17 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: Evan <Evan@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 16:43:39 by Evan              #+#    #+#             */
+/*   Updated: 2025/03/04 16:48:09 by Evan             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 
-static int	is_charset(char c, const char *charset)
-{
-	while (*charset)
-	{
-		if (c == *charset)
-			return (1);
-		charset++;
-	}
-	return (0);
-}
-
-static int	count_words(const char *str, const char *charset)
+static int	count_words(const char *str, char delim)
 {
 	int	count;
 	int	in_word;
@@ -20,66 +21,79 @@ static int	count_words(const char *str, const char *charset)
 	in_word = 0;
 	while (*str)
 	{
-		if (!is_charset(*str, charset) && !in_word)
+		if (*str != delim && !in_word)
 		{
 			in_word = 1;
 			count++;
 		}
-		else if (is_charset(*str, charset))
+		else if (*str == delim)
 			in_word = 0;
 		str++;
 	}
 	return (count);
 }
 
-static char	*malloc_word(const char *str, const char *charset)
+static char	*malloc_word(const char *start, size_t len)
 {
-	int		len;
 	char	*word;
-	int		i;
+	size_t	i;
 
-	i = 0;
-	len = 0;
-	while (str[len] && !is_charset(str[len], charset))
-		len++;
-	word = malloc(sizeof(char) * (len + 1));
+	word = (char *)malloc(len + 1);
 	if (!word)
 		return (NULL);
+	i = 0;
 	while (i < len)
 	{
-		word[i] = str[i];
+		word[i] = start[i];
 		i++;
 	}
 	word[len] = '\0';
 	return (word);
 }
 
-static void	skip_charset(char **str, const char *charset)
+static void	free_all(char **tab, int i)
 {
-	while (**str && is_charset(**str, charset))
-		(*str)++;
+	while (i >= 0)
+		free(tab[i--]);
+	free(tab);
 }
 
-char	**ft_split(char *str, char *charset)
+static const char	*get_next_word(const char *str, char delim, size_t *len)
 {
-	int		count;
-	char	**tab;
-	int		i;
+	while (*str && *str == delim)
+		str++;
+	if (!*str)
+		return (NULL);
+	*len = 0;
+	while (str[*len] && str[*len] != delim)
+		(*len)++;
+	return (str);
+}
 
-	count = count_words(str, charset);
-	tab = malloc(sizeof(char *) * (count + 1));
-	i = 0;
+char	**ft_split(const char *str, char delim)
+{
+	char		**tab;
+	int			words;
+	int			i;
+	size_t		len;
+	const char	*word_start;
+
+	if (!str)
+		return (NULL);
+	words = count_words(str, delim);
+	tab = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!tab)
 		return (NULL);
-	while (*str)
+	i = 0;
+	word_start = get_next_word(str, delim, &len);
+	while (word_start)
 	{
-		skip_charset(&str, charset);
-		if (*str)
-		{
-			tab[i++] = malloc_word(str, charset);
-			while (*str && !is_charset(*str, charset))
-				str++;
-		}
+		tab[i] = malloc_word(word_start, len);
+		if (!tab[i])
+			return (free_all(tab, i - 1), NULL);
+		i++;
+		str = word_start + len;
+		word_start = get_next_word(str, delim, &len);
 	}
 	tab[i] = NULL;
 	return (tab);

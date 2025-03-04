@@ -1,18 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: Evan <Evan@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 15:45:59 by Evan              #+#    #+#             */
+/*   Updated: 2025/03/04 15:46:00 by Evan             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 
-static int ft_strlen(const char *s)
+static int	ft_strlen(const char *s)
 {
-    int len = 0;
+	int	len;
 
-    while (s[len])
-        len++;
-    return len;
+	len = 0;
+	while (s[len])
+		len++;
+	return (len);
 }
 
-void ft_putendl_fd(char *s, int fd)
+void	ft_putendl_fd(char *s, int fd)
 {
-    if (!s)
-        return;
-    write(fd, s, ft_strlen(s));
-    write(fd, "\n", 1);
+	if (!s)
+		return ;
+	write(fd, s, ft_strlen(s));
+	write(fd, "\n", 1);
 }
